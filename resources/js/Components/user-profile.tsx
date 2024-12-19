@@ -24,6 +24,7 @@ import {
     LogOut,
 } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import { getInitials } from "@/lib/utils";
 
 const UserProfile = ({
     user,
@@ -50,7 +51,7 @@ const UserProfile = ({
                                     alt={user.name}
                                 />
                                 <AvatarFallback className="rounded-lg">
-                                    CN
+                                    {getInitials(user.name)}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -78,7 +79,7 @@ const UserProfile = ({
                                         alt={user.name}
                                     />
                                     <AvatarFallback className="rounded-lg">
-                                        CN
+                                        {getInitials(user.name)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
