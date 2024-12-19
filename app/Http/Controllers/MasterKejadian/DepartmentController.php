@@ -35,6 +35,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         $request->validate([
             'kode' => 'required|string|unique:departments,kode|max:255',
             'keterangan' => 'required|string',
@@ -43,7 +44,7 @@ class DepartmentController extends Controller
         Department::create([
             'kode' => $request->kode,
             'keterangan' => $request->keterangan,
-            'created_by' => 'Sistem',
+            'created_by' => $user->name,
         ]);
 
         return back()->with('success', 'Department created successfully');
@@ -68,9 +69,26 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Department $department)
     {
         //
+        $user = Auth::user();
+        $request->validate([
+            'kode' => 'required|string|max:255|unique:departments,kode,' . $department->id,
+            'keterangan' => 'required|string|max:500', // Batas keterangan 500 karakter
+        ], [
+            'kode.required' => 'Kode wajib diisi.',
+            'kode.unique' => 'Kode sudah digunakan oleh department lain.',
+            'keterangan.required' => 'Keterangan wajib diisi.',
+        ]);
+
+        $department->update([
+            'kode' => $request->kode,
+            'keterangan' => $request->keterangan,
+            'updated_by' => $user->name, // Gunakan name atau atribut lain
+        ]);
+
+        return redirect()->route('department.index')->with('success', 'Departemen berhasil diperbarui!');
     }
 
     /**
@@ -81,6 +99,6 @@ class DepartmentController extends Controller
         //
         $department->delete(); // Menghapus departemen
 
-        return redirect()->route('/master-kejadian/department')->with('success', 'Departemen berhasil dihapus!');
+        return redirect()->route('department.index')->with('success', 'Departemen berhasil dihapus!');
     }
 }

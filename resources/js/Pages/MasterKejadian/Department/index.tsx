@@ -31,7 +31,6 @@ export interface Department {
     modified_date: string | null;
     modified_by: string | null;
 }
-
 interface Props {
     departments: Department[];
 }
