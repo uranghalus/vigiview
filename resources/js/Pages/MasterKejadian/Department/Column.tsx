@@ -212,7 +212,7 @@ const EditForm = ({ department }: { department: Departement }) => {
 // Delete Handler
 const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this department?")) {
-        router.delete(`/departments/${id}`, {
+        router.delete(`/master-kejadian/department/${id}`, {
             onSuccess: () => {
                 console.log("Department deleted successfully");
             },
