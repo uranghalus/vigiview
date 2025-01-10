@@ -43,7 +43,7 @@ export const items = [
                     },
                     {
                         title: "Jabatan",
-                        url: "#",
+                        url: "/master-kejadian/jabatan",
                     },
                     {
                         title: "Jenis Kelengkapan Dokumen",

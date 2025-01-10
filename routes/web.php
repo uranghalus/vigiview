@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MasterKejadian\DepartmentController;
+use App\Http\Controllers\MasterKejadian\JabatanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     // Master Kejadian
     Route::prefix('master-kejadian')->group(function () {
         Route::resource('/department', DepartmentController::class);
+        Route::resource('/jabatan', JabatanController::class);
     });
 });
 
