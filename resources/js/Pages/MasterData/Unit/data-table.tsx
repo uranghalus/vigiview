@@ -23,16 +23,8 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { Link, router } from "@inertiajs/react";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/Components/ui/dialog";
-import { Label } from "@/Components/ui/label";
-import { Jabatan } from "./Column";
+import { Link } from "@inertiajs/react";
+
 import React from "react";
 
 interface DataTableProps<TData> {
@@ -46,12 +38,6 @@ export default function DataTable<TData>({
 }: DataTableProps<TData>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [rowSelection, setRowSelection] = React.useState({});
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [formState, setFormState] = useState({
-        id: "", // You can keep it as string initially
-        kode: "",
-        keterangan: "",
-    });
     const table = useReactTable({
         data,
         columns,
@@ -66,33 +52,6 @@ export default function DataTable<TData>({
             rowSelection,
         },
     });
-    const openDialog = (jabatan: Jabatan | null = null) => {
-        setFormState({
-            id: "", // Reset `id` as string
-            kode: "",
-            keterangan: "",
-        });
-        setIsDialogOpen(true);
-    };
-    // Close dialog
-    const closeDialog = () => {
-        setIsDialogOpen(false);
-        setFormState({ id: "", kode: "", keterangan: "" });
-    };
-    // Handle form submission
-    const handleSubmit = () => {
-        const { id, kode, keterangan } = formState;
-        const url = "/master-kejadian/jabatan";
-        router.visit(url, {
-            method: "post",
-            data: { kode, keterangan },
-            onSuccess: () => {
-                closeDialog();
-                // Optionally trigger a page reload or state update after success
-            },
-            preserveScroll: true,
-        });
-    };
     return (
         <>
             <div className="flex justify-between items-center w-full mb-4">
@@ -108,7 +67,7 @@ export default function DataTable<TData>({
                     {/* Optional Button/Actions */}
                     <Link
                         className="btn-primary"
-                        href={route("jabatan.create")}
+                        href={route("data-unit.create")}
                     >
                         Tambah Data
                     </Link>
@@ -167,51 +126,6 @@ export default function DataTable<TData>({
                 </Table>
             </div>
             <DataTablePagination table={table} />
-
-            {/* LINK Dialog Tambah Data */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Tambah Jabatan</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div>
-                            <Label htmlFor="kode">Kode</Label>
-                            <Input
-                                id="kode"
-                                placeholder="Masukkan KODE"
-                                value={formState.kode}
-                                onChange={(e) =>
-                                    setFormState({
-                                        ...formState,
-                                        kode: e.target.value,
-                                    })
-                                } // Disable KODE saat edit
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="keterangan">Keterangan</Label>
-                            <Input
-                                id="keterangan"
-                                placeholder="Masukkan Keterangan"
-                                value={formState.keterangan}
-                                onChange={(e) =>
-                                    setFormState({
-                                        ...formState,
-                                        keterangan: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button variant="secondary" onClick={closeDialog}>
-                            Cancel
-                        </Button>
-                        <Button onClick={handleSubmit}>Tambah Data</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

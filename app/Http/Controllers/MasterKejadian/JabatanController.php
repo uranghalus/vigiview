@@ -37,20 +37,24 @@ class JabatanController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $user = Auth::user();
-        $request->validate([
-            'kode' => 'required|string|unique:departments,kode|max:255',
+
+        $validated = $request->validate([
+            'kode' => 'required|string|unique:jabatan,kode|max:255',
             'keterangan' => 'required|string',
         ]);
 
-        Jabatan::create([
-            'kode' => $request->kode,
-            'keterangan' => $request->keterangan,
-            'create' => $user->name,
-        ]);
+        try {
+            Jabatan::create([
+                'kode' => $validated['kode'],
+                'keterangan' => $validated['keterangan'],
+                'create' => $user->name,
+            ]);
 
-        return back()->with('success', 'Department created successfully');
+            return redirect()->back()->with('success', 'Jabatan berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data']);
+        }
     }
 
     /**
@@ -59,6 +63,9 @@ class JabatanController extends Controller
     public function show(Jabatan $jabatan)
     {
         //
+        return Inertia::render('MasterKejadian/Jabatan/show', [
+            'jabatan' => $jabatan,
+        ]);
     }
 
     /**
@@ -67,6 +74,7 @@ class JabatanController extends Controller
     public function edit(Jabatan $jabatan)
     {
         //
+        return inertia('MasterKejadian/Jabatan/Edit', ['jabatan' => $jabatan]);
     }
 
     /**
@@ -75,6 +83,23 @@ class JabatanController extends Controller
     public function update(Request $request, Jabatan $jabatan)
     {
         //
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'kode' => 'required|string|unique:jabatan,kode|max:255',
+            'keterangan' => 'required|string',
+        ]);
+        try {
+            $jabatan->update([
+                'kode' => $validated['kode'],
+                'keterangan' => $validated['keterangan'],
+                'modified_date' => now(),
+                'modified' => $user->name,
+            ]);
+            return redirect()->back()->with('success', 'Jabatan berhasil diubah');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data']);
+        }
     }
 
     /**
@@ -83,5 +108,11 @@ class JabatanController extends Controller
     public function destroy(Jabatan $jabatan)
     {
         //
+        try {
+            $jabatan->delete();
+            return redirect()->back()->with('success', 'Jabatan berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus data']);
+        }
     }
 }

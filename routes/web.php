@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\MasterData\MasterUnitsController;
 use App\Http\Controllers\MasterKejadian\DepartmentController;
 use App\Http\Controllers\MasterKejadian\JabatanController;
 use App\Http\Controllers\ProfileController;
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Master Data
+    Route::prefix('master-data')->group(function () {
+        Route::resource('/data-unit', MasterUnitsController::class);
+    });
     // Master Kejadian
     Route::prefix('master-kejadian')->group(function () {
         Route::resource('/department', DepartmentController::class);

@@ -26,3 +26,16 @@ export function getDeviceInfo() {
 
     return macAddresses;
 }
+export function parseDate(date: string) {
+    const dateObject = new Date(date);
+    return dateObject
+        .toLocaleString("id-ID", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        })
+        .replace(",", "");
+}

@@ -1,6 +1,7 @@
 import {
     Briefcase,
     CircleMinus,
+    Database,
     FileDigit,
     FileUser,
     HardDrive,
@@ -25,17 +26,32 @@ export const items = [
                 icon: Briefcase,
             },
             {
+                title: "Master Data",
+                url: "#",
+                icon: Database,
+                items: [
+                    {
+                        title: "Data Unit",
+                        url: "/master-data/data-unit",
+                    },
+                    {
+                        title: "Nama Instansi",
+                        url: "/master-data/nama-instansi",
+                    },
+                ],
+            },
+            {
                 title: "Master Kejadian",
                 url: "#",
                 icon: CircleMinus,
                 items: [
                     {
                         title: "Pelapor/Korban/Pelaku",
-                        url: "#",
+                        url: "/master-kejadian/pelapor-korban-pelaku",
                     },
                     {
                         title: "Nomor Polisi",
-                        url: "#",
+                        url: "/master-kejadian/nomor-polisi",
                     },
                     {
                         title: "Department",
@@ -47,11 +63,11 @@ export const items = [
                     },
                     {
                         title: "Jenis Kelengkapan Dokumen",
-                        url: "#",
+                        url: "/master-kejadian/jenis-kelengkapan-dokumen",
                     },
                     {
                         title: "Kode Warning",
-                        url: "#",
+                        url: "/master-kejadian/kode-warning",
                     },
                 ],
             },

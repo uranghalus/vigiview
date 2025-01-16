@@ -7,8 +7,8 @@ export interface Jabatan {
     id: number | string;
     kode: string;
     keterangan: string;
-    created_date: string;
-    created: string;
+    create_date: string;
+    create: string;
     modified_date: string | null;
     modified: string | null;
 }

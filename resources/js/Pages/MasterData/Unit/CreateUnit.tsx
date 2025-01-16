@@ -1,3 +1,21 @@
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Head, Link, router } from "@inertiajs/react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import React from "react";
+import { toast } from "sonner";
+
+import { Button } from "@/Components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/Components/ui/form";
+import { Input } from "@/Components/ui/input";
 import {
     Card,
     CardContent,
@@ -5,72 +23,40 @@ import {
     CardHeader,
     CardTitle,
 } from "@/Components/ui/card";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Head, Link, router } from "@inertiajs/react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/Components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/Components/ui/form";
-import { Input } from "@/Components/ui/input";
 import { Save } from "lucide-react";
-import { toast } from "sonner";
 
-export const jabatanSchema = z.object({
-    id: z.number().optional(),
-    kode: z
-        .string()
-        .min(2, "Kode minimal 2 karakter")
-        .max(50, "Kode maksimal 50 karakter"),
-    keterangan: z
-        .string()
-        .min(2, "Keterangan minimal 2 karakter")
-        .max(50, "Keterangan maksimal 50 karakter"),
-    created_date: z.string().optional(),
-    created: z.string().optional(),
-    modified_date: z.string().nullable().optional(),
-    modified: z.string().nullable().optional(),
+const unitSchema = z.object({
+    kode_unit: z.string().min(1, "Kode is required"),
+    keterangan: z.string().min(1, "Keterangan is required"),
 });
 
-const CreateJabatan = () => {
-    const form = useForm<z.infer<typeof jabatanSchema>>({
-        resolver: zodResolver(jabatanSchema),
+const CreateUnit: React.FC = () => {
+    const form = useForm<z.infer<typeof unitSchema>>({
+        resolver: zodResolver(unitSchema),
         defaultValues: {
-            kode: "",
+            kode_unit: "",
             keterangan: "",
         },
     });
 
-    function onSubmit(values: z.infer<typeof jabatanSchema>) {
-        const { kode, keterangan } = values;
+    function onSubmit(values: z.infer<typeof unitSchema>) {
+        const { kode_unit, keterangan } = values;
         router.post(
-            "/master-kejadian/jabatan",
-            { kode, keterangan },
+            "/master-data/data-unit",
+            { kode_unit, keterangan },
             {
                 onSuccess: () => {
-                    toast.success("Jabatan berhasil ditambahkan", {
-                        description: "Data jabatan berhasil disimpan.",
+                    toast.success("Unit berhasil ditambahkan", {
+                        description: "Data unit berhasil disimpan.",
                         action: {
                             label: "Lihat Data",
-                            onClick: () =>
-                                router.visit("/master-kejadian/jabatan"),
+                            onClick: () => router.visit("/master-data/unit"),
                         },
                     });
                 },
                 onError: (errors) => {
                     Object.values(errors).forEach((error) => {
-                        toast.error("Oops! Terjadi kesalahan", {
-                            description: error,
-                        });
+                        toast.error(error);
                     });
                 },
                 preserveScroll: true,
@@ -80,24 +66,23 @@ const CreateJabatan = () => {
 
     return (
         <AuthenticatedLayout header={null}>
-            <Head title="Data Jabatan" />
-            <h1 className="text-2xl font-bold mb-4">Master Jabatan</h1>
+            <Head title="Create Unit" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Tambah Jabatan</CardTitle>
+                    <CardTitle>Create Unit</CardTitle>
                 </CardHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <CardContent className="space-y-4">
                             <FormField
                                 control={form.control}
-                                name="kode"
+                                name="kode_unit"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Jabatan</FormLabel>
+                                        <FormLabel>Kode Unit</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Kode Jabatan"
+                                                placeholder="Kode Unit"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -125,7 +110,7 @@ const CreateJabatan = () => {
                         <CardFooter className="flex items-center justify-between">
                             <Link
                                 className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600"
-                                href={route("jabatan.index")}
+                                href={route("data-unit.index")}
                             >
                                 Kembali
                             </Link>
@@ -140,4 +125,4 @@ const CreateJabatan = () => {
     );
 };
 
-export default CreateJabatan;
+export default CreateUnit;

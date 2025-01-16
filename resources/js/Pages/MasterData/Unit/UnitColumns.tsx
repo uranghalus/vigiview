@@ -16,18 +16,17 @@ import { Link, router } from "@inertiajs/react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil, Trash } from "lucide-react";
+import { parseDate } from "@/lib/utils";
 
-export type Jabatan = {
+export type Unit = {
     id: number;
-    kode: string;
+    kode_unit: string;
     keterangan: string;
-    create_date: string;
-    create: string;
-    modified_date: string | null;
-    modified: string | null;
+    created_at: string;
+    updated_at: string;
 };
 
-export const JabatanColumn: ColumnDef<Jabatan>[] = [
+export const UnitColumns: ColumnDef<Unit>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -53,9 +52,9 @@ export const JabatanColumn: ColumnDef<Jabatan>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "kode",
+        accessorKey: "kode_unit",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Kode Dept" />
+            <DataTableColumnHeader column={column} title="Kode Tipe Unit" />
         ),
     },
     {
@@ -65,16 +64,18 @@ export const JabatanColumn: ColumnDef<Jabatan>[] = [
         ),
     },
     {
-        accessorKey: "create_date",
+        accessorKey: "created_at",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Date Create" />
         ),
+        cell: ({ row }) => parseDate(row.original.created_at),
     },
     {
-        accessorKey: "create",
+        accessorKey: "updated_at",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Create By" />
+            <DataTableColumnHeader column={column} title="Date Modified" />
         ),
+        cell: ({ row }) => parseDate(row.original.updated_at),
     },
     {
         id: "actions",
@@ -82,14 +83,14 @@ export const JabatanColumn: ColumnDef<Jabatan>[] = [
         cell: ({ row }) => (
             <div className="inline-flex rounded-lg shadow-sm">
                 <Link
-                    href={`/master-kejadian/jabatan/${row.original.id}`}
+                    href={route("data-unit.show", row.original.id)}
                     className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-l-lg text-sm font-medium focus:z-10 border border-emerald-700 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-emerald-800 dark:border-emerald-700 dark:hover:bg-emerald-900 dark:focus:ring-emerald-600"
                     title="lihat data"
                 >
                     <Eye className="size-5" />
                 </Link>
                 <Link
-                    href={`/master-kejadian/jabatan/${row.original.id}/edit`}
+                    href={route("data-unit.edit", row.original.id)}
                     className="py-2 px-3 inline-flex justify-center items-center gap-2 text-sm font-medium focus:z-10 border border-amber-600 bg-amber-500 text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-50 disabled:pointer-events-none dark:bg-amber-700 dark:border-amber-600 dark:text-white dark:hover:bg-amber-800 dark:focus:ring-amber-500"
                     title="Edit Data"
                 >
@@ -129,7 +130,7 @@ export const JabatanColumn: ColumnDef<Jabatan>[] = [
 
 // Delete Handler
 const handleDelete = (id: number) => {
-    router.delete(`/master-kejadian/jabatan/${id}`, {
+    router.delete(`/master-data/data-unit/${id}`, {
         onSuccess: () => {
             console.log("jabatan deleted successfully");
         },

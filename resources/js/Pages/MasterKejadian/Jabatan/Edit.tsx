@@ -1,15 +1,11 @@
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/Components/ui/card";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, Link, router } from "@inertiajs/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import React from "react";
+import { jabatanSchema } from "./create";
+import { toast } from "sonner";
 
 import { Button } from "@/Components/ui/button";
 import {
@@ -22,38 +18,31 @@ import {
     FormMessage,
 } from "@/Components/ui/form";
 import { Input } from "@/Components/ui/input";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/Components/ui/card";
 import { Save } from "lucide-react";
-import { toast } from "sonner";
-
-export const jabatanSchema = z.object({
-    id: z.number().optional(),
-    kode: z
-        .string()
-        .min(2, "Kode minimal 2 karakter")
-        .max(50, "Kode maksimal 50 karakter"),
-    keterangan: z
-        .string()
-        .min(2, "Keterangan minimal 2 karakter")
-        .max(50, "Keterangan maksimal 50 karakter"),
-    created_date: z.string().optional(),
-    created: z.string().optional(),
-    modified_date: z.string().nullable().optional(),
-    modified: z.string().nullable().optional(),
-});
-
-const CreateJabatan = () => {
+import { Jabatan } from "./Column";
+type EditProps = {
+    jabatan: Jabatan;
+};
+const Edit: React.FC<EditProps> = ({ jabatan }) => {
     const form = useForm<z.infer<typeof jabatanSchema>>({
         resolver: zodResolver(jabatanSchema),
         defaultValues: {
-            kode: "",
-            keterangan: "",
+            kode: jabatan.kode,
+            keterangan: jabatan.keterangan,
         },
     });
 
     function onSubmit(values: z.infer<typeof jabatanSchema>) {
         const { kode, keterangan } = values;
-        router.post(
-            "/master-kejadian/jabatan",
+        router.patch(
+            `/master-kejadian/jabatan/${jabatan.id}`, // Fix the URL to use jabatan.id
             { kode, keterangan },
             {
                 onSuccess: () => {
@@ -68,23 +57,19 @@ const CreateJabatan = () => {
                 },
                 onError: (errors) => {
                     Object.values(errors).forEach((error) => {
-                        toast.error("Oops! Terjadi kesalahan", {
-                            description: error,
-                        });
+                        toast.error(error);
                     });
                 },
                 preserveScroll: true,
             }
         );
     }
-
     return (
         <AuthenticatedLayout header={null}>
-            <Head title="Data Jabatan" />
-            <h1 className="text-2xl font-bold mb-4">Master Jabatan</h1>
+            <Head title="Update Jabatan" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Tambah Jabatan</CardTitle>
+                    <CardTitle>Update Jabatan</CardTitle>
                 </CardHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -130,7 +115,7 @@ const CreateJabatan = () => {
                                 Kembali
                             </Link>
                             <Button type="submit">
-                                <Save className="size-6" /> Simpan Data
+                                <Save className="size-6" /> Update Data
                             </Button>
                         </CardFooter>
                     </form>
@@ -140,4 +125,4 @@ const CreateJabatan = () => {
     );
 };
 
-export default CreateJabatan;
+export default Edit;
