@@ -4,12 +4,14 @@ import { Head, Link, router } from "@inertiajs/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import React from "react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/Components/ui/button";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -24,29 +26,30 @@ import {
     CardTitle,
 } from "@/Components/ui/card";
 import { Save } from "lucide-react";
+import { Unit } from "./UnitColumns";
+import { unitSchema } from "./CreateUnit";
 
-export const unitSchema = z.object({
-    kode_unit: z.string().min(1, "Kode is required"),
-    keterangan: z.string().min(1, "Keterangan is required"),
-});
+type EditProps = {
+    data_unit: Unit;
+};
 
-const CreateUnit: React.FC = () => {
+const Edit: React.FC<EditProps> = ({ data_unit }) => {
     const form = useForm<z.infer<typeof unitSchema>>({
         resolver: zodResolver(unitSchema),
         defaultValues: {
-            kode_unit: "",
-            keterangan: "",
+            kode_unit: data_unit.kode_unit,
+            keterangan: data_unit.keterangan,
         },
     });
 
     function onSubmit(values: z.infer<typeof unitSchema>) {
         const { kode_unit, keterangan } = values;
-        router.post(
-            "/master-data/data-unit",
+        router.patch(
+            `/master-data/data-unit/${data_unit.id}`,
             { kode_unit, keterangan },
             {
                 onSuccess: () => {
-                    toast.success("Unit berhasil ditambahkan", {
+                    toast.success("Unit berhasil diperbarui", {
                         description: "Data unit berhasil disimpan.",
                         action: {
                             label: "Lihat Data",
@@ -66,10 +69,10 @@ const CreateUnit: React.FC = () => {
 
     return (
         <AuthenticatedLayout header={null}>
-            <Head title="Create Unit" />
+            <Head title="Update Unit" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Create Unit</CardTitle>
+                    <CardTitle>Update Unit</CardTitle>
                 </CardHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -115,7 +118,7 @@ const CreateUnit: React.FC = () => {
                                 Kembali
                             </Link>
                             <Button type="submit">
-                                <Save className="size-6" /> Simpan Data
+                                <Save className="size-6" /> Update Data
                             </Button>
                         </CardFooter>
                     </form>
@@ -125,4 +128,4 @@ const CreateUnit: React.FC = () => {
     );
 };
 
-export default CreateUnit;
+export default Edit;

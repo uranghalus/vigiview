@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class MasterUnit extends Model
 {
     //
-    use HasFactory;
-    protected $table = 'units';
+    protected $table = "master_units";
     protected $fillable = [
         'kode_unit',
         'keterangan',
+        'created_by',
+        'updated_by'
     ];
-
     public $timestamps = true;
 }

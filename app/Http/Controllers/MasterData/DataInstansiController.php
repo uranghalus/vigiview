@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
-use App\Models\Unit;
+use App\Models\MasterInstansi;
+use App\Models\MasterUnit;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MasterUnitsController extends Controller
+class DataInstansiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +16,8 @@ class MasterUnitsController extends Controller
     public function index()
     {
         //
-        $units = Unit::all();
-        return Inertia::render("MasterData/Unit/Index", [
-            "units" => $units
-        ]);
+        $data = MasterInstansi::all();
+        return Inertia::render('MasterData/DataInstansi/Index', ['data' => $data]);
     }
 
     /**
@@ -27,7 +26,8 @@ class MasterUnitsController extends Controller
     public function create()
     {
         //
-        return Inertia::render("MasterData/Unit/CreateUnit");
+        $data = MasterUnit::all();
+        return Inertia::render('MasterData/DataInstansi/Create', ['unit_data' => $data]);
     }
 
     /**
@@ -36,26 +36,20 @@ class MasterUnitsController extends Controller
     public function store(Request $request)
     {
         //
-        Unit::create($request->validated());
-
-        return redirect()->route('data-unit.index')->with('success', 'Unit berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Unit $unit)
+    public function show(MasterInstansi $masterInstansi)
     {
         //
-        return Inertia::render('MasterData/Unit/show', [
-            'unit' => $unit,
-        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Unit $unit)
+    public function edit(MasterInstansi $masterInstansi)
     {
         //
     }
@@ -63,7 +57,7 @@ class MasterUnitsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Unit $unit)
+    public function update(Request $request, MasterInstansi $masterInstansi)
     {
         //
     }
@@ -71,7 +65,7 @@ class MasterUnitsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Unit $unit)
+    public function destroy(MasterInstansi $masterInstansi)
     {
         //
     }

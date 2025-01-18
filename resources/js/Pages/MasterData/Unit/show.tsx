@@ -12,14 +12,15 @@ import React from "react";
 import { Separator } from "@/Components/ui/separator";
 import { Pencil, Trash } from "lucide-react";
 import { Unit } from "./UnitColumns";
+import { parseDate } from "@/lib/utils";
 
 type showProps = {
-    unit: Unit;
+    data_unit: Unit;
 };
-const show: React.FC<showProps> = ({ unit }) => {
-    console.log("unit:", unit); // Log the unit prop
+const show: React.FC<showProps> = ({ data_unit }) => {
+    console.log("data_unit:", data_unit); // Log the data_unit prop
 
-    if (!unit) {
+    if (!data_unit) {
         return (
             <AuthenticatedLayout>
                 <Head title="Lihat Data Unit" />
@@ -61,13 +62,13 @@ const show: React.FC<showProps> = ({ unit }) => {
                             Kode Unit
                         </dt>
                         <dd className="text-gray-600 text-sm">
-                            {unit.kode_unit}
+                            {data_unit.kode_unit}
                         </dd>
                         <dt className="font-bold text-gray-800 text-lg">
                             Keterangan
                         </dt>
                         <dd className="text-gray-600 text-sm">
-                            {unit.keterangan}
+                            {data_unit.keterangan}
                         </dd>
                     </dl>
                     <Separator className="my-3" />
@@ -79,13 +80,15 @@ const show: React.FC<showProps> = ({ unit }) => {
                             Tanggal Dibuat / Pembuat
                         </dt>
                         <dd className="text-gray-600 text-sm">
-                            {unit.created_at}
+                            {parseDate(data_unit.created_at)} /{" "}
+                            {data_unit.created_by}
                         </dd>
                         <dt className="font-bold text-gray-800 text-lg">
                             Tanggal Modifikasi / Pengubah
                         </dt>
                         <dd className="text-gray-600 text-sm">
-                            {unit.updated_at}
+                            {parseDate(data_unit.updated_at)} /{" "}
+                            {data_unit.updated_by}
                         </dd>
                     </dl>
                 </CardContent>
@@ -97,20 +100,20 @@ const show: React.FC<showProps> = ({ unit }) => {
                         Kembali
                     </Link>
                     <div className="flex items-center gap-4">
-                        {/* <Link
-                            href={route("data-unit.edit", unit.id)}
+                        <Link
+                            href={route("data-unit.edit", data_unit.id)}
                             className="text-white inline-flex items-center bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800"
                         >
                             <Pencil className="mr-1 -ml-1 w-5 h-5" />
                             Edit
-                        </Link> */}
-                        {/* <Link
-                            href={route("data-unit.destroy", unit.id)}
+                        </Link>
+                        <Link
+                            href={route("data-unit.destroy", data_unit.id)}
                             className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"
                         >
                             <Trash className="mr-1 -ml-1 w-5 h-5" />
                             Delete
-                        </Link> */}
+                        </Link>
                     </div>
                 </CardFooter>
             </Card>

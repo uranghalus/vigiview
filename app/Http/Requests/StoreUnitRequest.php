@@ -22,6 +22,8 @@ class StoreUnitRequest extends FormRequest
         return [
             'kode_unit' => 'required|string|max:255',
             'keterangan' => 'required|string|max:255',
+            'created_by' => 'nullable|string|max:255',
+            'updated_by' => 'nullable|string|max:255',
         ];
     }
 }

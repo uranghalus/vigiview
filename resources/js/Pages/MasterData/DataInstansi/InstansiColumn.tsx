@@ -18,17 +18,20 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil, Trash } from "lucide-react";
 import { parseDate } from "@/lib/utils";
 
-export type Unit = {
+export type Instansi = {
     id: number;
-    kode_unit: string;
-    keterangan: string;
+    kode_instansi: string;
+    keterangan_instansi: string;
+    lokasi: string;
+    area: string;
+    unit_id: number;
     created_at: string;
     created_by: string;
     updated_at: string;
     updated_by: string;
 };
 
-export const UnitColumns: ColumnDef<Unit>[] = [
+export const InstansiColumns: ColumnDef<Instansi>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -54,30 +57,35 @@ export const UnitColumns: ColumnDef<Unit>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "kode_unit",
+        accessorKey: "kode_instansi",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Kode Tipe Unit" />
+            <DataTableColumnHeader
+                column={column}
+                title="Kode Instansi"
+                className="w-fit"
+            />
         ),
     },
     {
-        accessorKey: "keterangan",
+        accessorKey: "keterangan_instansi",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Keterangan" />
+            <DataTableColumnHeader
+                column={column}
+                title="Keterangan Instansi"
+            />
         ),
     },
     {
-        accessorKey: "created_at",
+        accessorKey: "lokasi",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Date Create" />
+            <DataTableColumnHeader column={column} title="Lokasi" />
         ),
-        cell: ({ row }) => parseDate(row.original.created_at),
     },
     {
-        accessorKey: "updated_at",
+        accessorKey: "area",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Date Modified" />
+            <DataTableColumnHeader column={column} title="Area" />
         ),
-        cell: ({ row }) => parseDate(row.original.updated_at),
     },
     {
         id: "actions",
@@ -85,14 +93,14 @@ export const UnitColumns: ColumnDef<Unit>[] = [
         cell: ({ row }) => (
             <div className="inline-flex rounded-lg shadow-sm">
                 <Link
-                    href={route("data-unit.show", row.original.id)}
+                    href={route("data-instansi.show", row.original.id)}
                     className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-l-lg text-sm font-medium focus:z-10 border border-emerald-700 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-emerald-800 dark:border-emerald-700 dark:hover:bg-emerald-900 dark:focus:ring-emerald-600"
                     title="lihat data"
                 >
                     <Eye className="size-5" />
                 </Link>
                 <Link
-                    href={route("data-unit.edit", row.original.id)}
+                    href={route("data-instansi.edit", row.original.id)}
                     className="py-2 px-3 inline-flex justify-center items-center gap-2 text-sm font-medium focus:z-10 border border-amber-600 bg-amber-500 text-white shadow-sm hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-50 disabled:pointer-events-none dark:bg-amber-700 dark:border-amber-600 dark:text-white dark:hover:bg-amber-800 dark:focus:ring-amber-500"
                     title="Edit Data"
                 >
@@ -132,12 +140,12 @@ export const UnitColumns: ColumnDef<Unit>[] = [
 
 // Delete Handler
 const handleDelete = (id: number) => {
-    router.delete(`/master-data/data-unit/${id}`, {
+    router.delete(`/master-data/data-instansi/${id}`, {
         onSuccess: () => {
-            console.log("jabatan deleted successfully");
+            console.log("instansi deleted successfully");
         },
         onError: (error) => {
-            console.log("Error deleting jabatan:", error);
+            console.log("Error deleting instansi:", error);
         },
     });
 };

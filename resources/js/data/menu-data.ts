@@ -36,7 +36,7 @@ export const items = [
                     },
                     {
                         title: "Nama Instansi",
-                        url: "/master-data/nama-instansi",
+                        url: route("data-instansi.index"),
                     },
                 ],
             },

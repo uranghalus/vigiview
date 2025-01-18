@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\MasterData\MasterUnitsController;
+use App\Http\Controllers\MasterData\DataInstansiController;
+use App\Http\Controllers\MasterData\MasterDataUnitController;
 use App\Http\Controllers\MasterKejadian\DepartmentController;
 use App\Http\Controllers\MasterKejadian\JabatanController;
 use App\Http\Controllers\ProfileController;
@@ -30,7 +31,8 @@ Route::middleware('auth')->group(function () {
 
     // Master Data
     Route::prefix('master-data')->group(function () {
-        Route::resource('/data-unit', MasterUnitsController::class);
+        Route::resource('/data-unit', MasterDataUnitController::class);
+        Route::resource('/data-instansi', DataInstansiController::class);
     });
     // Master Kejadian
     Route::prefix('master-kejadian')->group(function () {
