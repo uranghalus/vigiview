@@ -24,21 +24,16 @@ import {
     CardTitle,
 } from "@/Components/ui/card";
 import { Check, ChevronsUpDown, Save } from "lucide-react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/Components/ui/popover";
-import { cn } from "@/lib/utils";
+
 import { Unit } from "../Unit/UnitColumns";
+
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/Components/ui/command";
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/Components/ui/select";
 
 const instansiSchema = z.object({
     kode_instansi: z.string().min(1, "Kode Instansi is required"),
@@ -49,9 +44,9 @@ const instansiSchema = z.object({
 });
 
 interface CreateInstansiProps {
-    units: Unit[];
+    unit_data: Unit[];
 }
-const CreateInstansi: React.FC<CreateInstansiProps> = ({ units }) => {
+const CreateInstansi: React.FC<CreateInstansiProps> = ({ unit_data = [] }) => {
     const form = useForm<z.infer<typeof instansiSchema>>({
         resolver: zodResolver(instansiSchema),
         defaultValues: {
@@ -100,6 +95,36 @@ const CreateInstansi: React.FC<CreateInstansiProps> = ({ units }) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <CardContent className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="unit_id"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Kode Unit</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Pilih Unit" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {unit_data.map((unit) => (
+                                                    <SelectItem
+                                                        value={unit.id.toString()}
+                                                        key={unit.id}
+                                                    >
+                                                        {unit.keterangan}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="kode_instansi"
@@ -162,87 +187,6 @@ const CreateInstansi: React.FC<CreateInstansiProps> = ({ units }) => {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="unit_id"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Unit ID</FormLabel>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        className={cn(
-                                                            "w-[200px] justify-between",
-                                                            !field.value &&
-                                                                "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        {field.value
-                                                            ? units.find(
-                                                                  (unit) =>
-                                                                      unit.id ===
-                                                                      Number(
-                                                                          field.value
-                                                                      )
-                                                              )?.keterangan
-                                                            : "Pilih Unit"}
-                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-[200px] p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Cari Unit..." />
-                                                    <CommandList>
-                                                        <CommandEmpty>
-                                                            Unit tidak
-                                                            ditemukan.
-                                                        </CommandEmpty>
-                                                        <CommandGroup>
-                                                            {units.map(
-                                                                (unit) => (
-                                                                    <CommandItem
-                                                                        key={
-                                                                            unit.id
-                                                                        }
-                                                                        value={
-                                                                            unit.keterangan
-                                                                        }
-                                                                        onSelect={() =>
-                                                                            field.onChange(
-                                                                                unit.id
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            unit.keterangan
-                                                                        }
-                                                                        <Check
-                                                                            className={cn(
-                                                                                "ml-auto",
-                                                                                unit.id ===
-                                                                                    Number(
-                                                                                        field.value
-                                                                                    )
-                                                                                    ? "opacity-100"
-                                                                                    : "opacity-0"
-                                                                            )}
-                                                                        />
-                                                                    </CommandItem>
-                                                                )
-                                                            )}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
                                         <FormMessage />
                                     </FormItem>
                                 )}

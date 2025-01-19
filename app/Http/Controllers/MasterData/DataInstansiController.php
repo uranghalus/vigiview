@@ -35,7 +35,17 @@ class DataInstansiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'kode_instansi' => 'required|string|max:255',
+            'keterangan_instansi' => 'required|string|max:255',
+            'lokasi' => 'nullable|string|max:255',
+            'area' => 'nullable|string|max:255',
+            'unit_id' => 'required|exists:master_units,id',
+        ]);
+
+        MasterInstansi::create($validated);
+
+        return redirect()->route('data-instansi.index')->with('success', 'Instansi berhasil ditambahkan');
     }
 
     /**
@@ -44,6 +54,7 @@ class DataInstansiController extends Controller
     public function show(MasterInstansi $masterInstansi)
     {
         //
+        return Inertia::render('/MasterData/Instansi/Show', ['masterInstansi' => $masterInstansi]);
     }
 
     /**
