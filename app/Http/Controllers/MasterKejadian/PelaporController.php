@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\MasterKejadian;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pelapor;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PelaporController extends Controller
 {
@@ -13,6 +15,8 @@ class PelaporController extends Controller
     public function index()
     {
         //
+        $data = Pelapor::all();
+        return Inertia::render('MasterKejadian/Pelapor/Index', ['data' => $data]);
     }
 
     /**

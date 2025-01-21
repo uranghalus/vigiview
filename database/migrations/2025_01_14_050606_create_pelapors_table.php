@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('departemen');
             $table->string('jabatan');
             $table->text('catatan')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamp('create_date')->useCurrent();
             $table->string('create_user');
             $table->timestamp('modified_date')->nullable()->useCurrentOnUpdate();

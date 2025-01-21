@@ -47,7 +47,7 @@ export const items = [
                 items: [
                     {
                         title: "Pelapor/Korban/Pelaku",
-                        url: "/master-kejadian/pelapor-korban-pelaku",
+                        url: "/master-kejadian/pelapor",
                     },
                     {
                         title: "Nomor Polisi",

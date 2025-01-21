@@ -5,6 +5,7 @@ use App\Http\Controllers\MasterData\DataInstansiController;
 use App\Http\Controllers\MasterData\MasterDataUnitController;
 use App\Http\Controllers\MasterKejadian\DepartmentController;
 use App\Http\Controllers\MasterKejadian\JabatanController;
+use App\Http\Controllers\MasterKejadian\PelaporController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('master-kejadian')->group(function () {
         Route::resource('/department', DepartmentController::class);
         Route::resource('/jabatan', JabatanController::class);
+        Route::resource('/pelapor', PelaporController::class);
     });
 });
 

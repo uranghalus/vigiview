@@ -25,6 +25,7 @@ class Pelapor extends Model
         'departemen',
         'jabatan',
         'catatan',
+        'foto',
         'create_date',
         'create_user',
         'modified_date',

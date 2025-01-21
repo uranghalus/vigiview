@@ -1,9 +1,10 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Head, Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import React from "react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/Components/ui/button";
@@ -23,10 +24,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/Components/ui/card";
-import { Check, ChevronsUpDown, Save } from "lucide-react";
-
-import { Unit } from "../Unit/UnitColumns";
-
+import { Save } from "lucide-react";
+import { Instansi } from "./InstansiColumn";
+import { instansiSchema } from "./Create";
 import {
     Select,
     SelectContent,
@@ -34,39 +34,34 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import { Unit } from "../Unit/UnitColumns";
 
-export const instansiSchema = z.object({
-    kode_instansi: z.string().min(1, "Kode Instansi is required"),
-    keterangan_instansi: z.string().min(1, "Keterangan Instansi is required"),
-    lokasi: z.string().optional(),
-    area: z.string().optional(),
-    unit_id: z.string().min(1, "Unit ID is required"),
-});
-
-interface CreateInstansiProps {
+type EditProps = {
+    data_instansi: Instansi;
     unit_data: Unit[];
-}
-const CreateInstansi: React.FC<CreateInstansiProps> = ({ unit_data = [] }) => {
+};
+
+const Edit: React.FC<EditProps> = ({ data_instansi, unit_data }) => {
     const form = useForm<z.infer<typeof instansiSchema>>({
         resolver: zodResolver(instansiSchema),
         defaultValues: {
-            kode_instansi: "",
-            keterangan_instansi: "",
-            lokasi: "",
-            area: "",
-            unit_id: "",
+            kode_instansi: data_instansi.kode_instansi,
+            keterangan_instansi: data_instansi.keterangan_instansi,
+            lokasi: data_instansi.lokasi,
+            area: data_instansi.area,
+            unit_id: data_instansi.unit_id.toString(),
         },
     });
 
     function onSubmit(values: z.infer<typeof instansiSchema>) {
         const { kode_instansi, keterangan_instansi, lokasi, area, unit_id } =
             values;
-        router.post(
-            "/master-data/data-instansi",
+        router.patch(
+            `/master-data/data-instansi/${data_instansi.id}`,
             { kode_instansi, keterangan_instansi, lokasi, area, unit_id },
             {
                 onSuccess: () => {
-                    toast.success("Instansi berhasil ditambahkan", {
+                    toast.success("Instansi berhasil diperbarui", {
                         description: "Data instansi berhasil disimpan.",
                         action: {
                             label: "Lihat Data",
@@ -87,10 +82,10 @@ const CreateInstansi: React.FC<CreateInstansiProps> = ({ unit_data = [] }) => {
 
     return (
         <AuthenticatedLayout header={null}>
-            <Head title="Create Instansi" />
+            <Head title="Update Instansi" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Create Instansi</CardTitle>
+                    <CardTitle>Update Instansi</CardTitle>
                 </CardHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -200,7 +195,7 @@ const CreateInstansi: React.FC<CreateInstansiProps> = ({ unit_data = [] }) => {
                                 Kembali
                             </Link>
                             <Button type="submit">
-                                <Save className="size-6" /> Simpan Data
+                                <Save className="size-6" /> Update Data
                             </Button>
                         </CardFooter>
                     </form>
@@ -210,4 +205,4 @@ const CreateInstansi: React.FC<CreateInstansiProps> = ({ unit_data = [] }) => {
     );
 };
 
-export default CreateInstansi;
+export default Edit;
