@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\MasterKejadian;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
+use App\Models\Jabatan;
+use App\Models\MasterInstansi;
+use App\Models\MasterUnit;
 use App\Models\Pelapor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +19,7 @@ class PelaporController extends Controller
     public function index()
     {
         //
-        $data = Pelapor::all();
+        $data = Pelapor::with(['tipeUnit', 'instansi', 'departemen', 'jabatan'])->get();
         return Inertia::render('MasterKejadian/Pelapor/Index', ['data' => $data]);
     }
 
@@ -25,6 +29,12 @@ class PelaporController extends Controller
     public function create()
     {
         //
+        return Inertia::render('MasterKejadian/Pelapor/Create', [
+            'units' => MasterUnit::all(),
+            'instansi' => MasterInstansi::all(),
+            'departemen' => Department::all(),
+            'jabatan' => Jabatan::all(),
+        ]);
     }
 
     /**

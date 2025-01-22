@@ -25,4 +25,12 @@ class Department extends Model
         'created_date',
         'modified_date',
     ];
+
+    /**
+     * Relasi ke model Pelapor.
+     */
+    public function pelapor()
+    {
+        return $this->hasMany(Pelapor::class, 'departemen_id');
+    }
 }

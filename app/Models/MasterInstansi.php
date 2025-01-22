@@ -19,6 +19,17 @@ class MasterInstansi extends Model
         'unit_id',
     ];
 
+    /**
+     * Relasi ke model Pelapor.
+     */
+    public function pelapor()
+    {
+        return $this->hasMany(Pelapor::class, 'instansi_id');
+    }
+
+    /**
+     * Relasi ke model MasterUnit.
+     */
     public function unit()
     {
         return $this->belongsTo(MasterUnit::class, 'unit_id');

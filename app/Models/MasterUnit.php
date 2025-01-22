@@ -15,4 +15,11 @@ class MasterUnit extends Model
         'updated_by'
     ];
     public $timestamps = true;
+    /**
+     * Relasi ke model Pelapor.
+     */
+    public function pelapor()
+    {
+        return $this->hasMany(Pelapor::class, 'tipe_unit_id');
+    }
 }

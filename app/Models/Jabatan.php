@@ -20,4 +20,11 @@ class Jabatan extends Model
     ];
 
     public $timestamps = true;
+    /**
+     * Relasi ke model Pelapor.
+     */
+    public function pelapor()
+    {
+        return $this->hasMany(Pelapor::class, 'jabatan_id');
+    }
 }

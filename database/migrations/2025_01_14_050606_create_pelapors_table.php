@@ -18,12 +18,10 @@ return new class extends Migration
             $table->string('no_telp');
             $table->string('jenis_pengenal');
             $table->string('no_id_pengenal');
-            $table->string('tipe_unit');
-            $table->string('nama_instansi');
-            $table->string('lokasi');
-            $table->string('area');
-            $table->string('departemen');
-            $table->string('jabatan');
+            $table->unsignedBigInteger('tipe_unit_id'); // Foreign key to master_units
+            $table->unsignedBigInteger('instansi_id'); // Foreign key to master_instansi
+            $table->unsignedBigInteger('departemen_id'); // Foreign key to departemen
+            $table->unsignedBigInteger('jabatan_id'); // Foreign key to jabatan
             $table->text('catatan')->nullable();
             $table->string('foto')->nullable();
             $table->timestamp('create_date')->useCurrent();
@@ -31,6 +29,12 @@ return new class extends Migration
             $table->timestamp('modified_date')->nullable()->useCurrentOnUpdate();
             $table->string('modified_user')->nullable();
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('tipe_unit_id')->references('id')->on('master_units')->onDelete('cascade');
+            $table->foreign('instansi_id')->references('id')->on('master_instansi')->onDelete('cascade');
+            $table->foreign('departemen_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('jabatan_id')->references('id')->on('jabatan')->onDelete('cascade');
         });
     }
 

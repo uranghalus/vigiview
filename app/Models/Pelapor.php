@@ -18,12 +18,10 @@ class Pelapor extends Model
         'no_telp',
         'jenis_pengenal',
         'no_id_pengenal',
-        'tipe_unit',
-        'nama_instansi',
-        'lokasi',
-        'area',
-        'departemen',
-        'jabatan',
+        'tipe_unit_id',
+        'instansi_id',
+        'departemen_id',
+        'jabatan_id',
         'catatan',
         'foto',
         'create_date',
@@ -33,4 +31,36 @@ class Pelapor extends Model
     ];
 
     public $timestamps = true;
+
+    /**
+     * Relasi ke model MasterUnit.
+     */
+    public function tipeUnit()
+    {
+        return $this->belongsTo(MasterUnit::class, 'tipe_unit_id');
+    }
+
+    /**
+     * Relasi ke model MasterInstansi.
+     */
+    public function instansi()
+    {
+        return $this->belongsTo(MasterInstansi::class, 'instansi_id');
+    }
+
+    /**
+     * Relasi ke model Departemen.
+     */
+    public function departemen()
+    {
+        return $this->belongsTo(Department::class, 'departemen_id');
+    }
+
+    /**
+     * Relasi ke model Jabatan.
+     */
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'jabatan_id');
+    }
 }
