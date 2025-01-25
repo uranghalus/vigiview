@@ -10,6 +10,8 @@ use App\Models\MasterUnit;
 use App\Models\Pelapor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class PelaporController extends Controller
 {
@@ -42,21 +44,47 @@ class PelaporController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $validatedData = $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|string|max:255',
+            'no_telp' => 'nullable|string|max:255',
+            'jenis_pengenal' => 'nullable|string|max:255',
+            'no_id_pengenal' => 'nullable|string|max:255',
+            'tipe_unit_id' => 'required|integer',
+            'instansi_id' => 'required|integer',
+            'departemen_id' => 'required|integer',
+            'jabatan_id' => 'required|integer',
+            'catatan' => 'nullable|string',
+            'foto' => 'nullable|file|image|max:2048',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $fileName = time() . '.' . $request->foto->extension();
+            $request->file('foto')->storeAs('uploads/pelapor', $fileName, 'public');
+            // $request->file('foto')->move(public_path('uploads/pelapor'), $fileName);
+            $validatedData['foto'] = $fileName;
+        }
+        $validatedData['create_user'] = $user->name;
+
+        Pelapor::create($validatedData);
+
+        return redirect()->route('pelapor.index')->with('success', 'Pelapor berhasil ditambahkan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $pelapor)
     {
-        //
+        $data_pelapor = Pelapor::with(['tipeUnit', 'instansi', 'departemen', 'jabatan'])->findOrFail($pelapor);
+        return Inertia::render('MasterKejadian/Pelapor/Show', ['data_pelapor' => $data_pelapor]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Pelapor $pelapor)
     {
         //
     }
@@ -64,7 +92,7 @@ class PelaporController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Pelapor $pelapor)
     {
         //
     }
@@ -72,8 +100,10 @@ class PelaporController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Pelapor $pelapor)
     {
         //
+        Storage::disk('public')->delete('uploads/pelapor/' . $pelapor->foto);
+        $pelapor->delete();
     }
 }

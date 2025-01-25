@@ -17,6 +17,8 @@ import { Link, router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil, Trash } from "lucide-react";
 import { parseDate } from "@/lib/utils";
+import { Departement } from "../Department/Column";
+import { Jabatan } from "../Jabatan/Column";
 
 export type Pelapor = {
     id: number;
@@ -29,6 +31,8 @@ export type Pelapor = {
     instansi_id: number;
     tipe_unit?: { keterangan: string };
     instansi?: { keterangan_instansi: string };
+    departemen?: Departement;
+    jabatan?: Jabatan;
     catatan: string;
     foto: string;
     create_date: string;

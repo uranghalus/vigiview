@@ -49,7 +49,7 @@ export const pelaporSchema = z.object({
     departemen_id: z.string().min(1, "Departemen ID is required"),
     jabatan_id: z.string().min(1, "Jabatan ID is required"),
     catatan: z.string().optional(),
-    foto: z.string().optional(),
+    foto: z.any().optional(),
 });
 
 interface CreatePelaporProps {
@@ -78,7 +78,7 @@ const Create: React.FC<CreatePelaporProps> = ({
             departemen_id: "",
             jabatan_id: "",
             catatan: "",
-            foto: "",
+            foto: null,
         },
     });
 
@@ -98,7 +98,12 @@ const Create: React.FC<CreatePelaporProps> = ({
     }, [form.watch("tipe_unit_id"), instansi]);
 
     function onSubmit(values: z.infer<typeof pelaporSchema>) {
-        router.post("/master-kejadian/pelapor", values, {
+        const formData = new FormData();
+        Object.keys(values).forEach((key) => {
+            formData.append(key, (values as any)[key]);
+        });
+
+        router.post("/master-kejadian/pelapor", formData, {
             onSuccess: () => {
                 toast.success("Pelapor berhasil ditambahkan", {
                     description: "Data pelapor berhasil disimpan.",
@@ -125,7 +130,10 @@ const Create: React.FC<CreatePelaporProps> = ({
                     <CardTitle>Create Pelapor</CardTitle>
                 </CardHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        encType="multipart/form-data"
+                    >
                         <CardContent className="space-y-4">
                             <FormField
                                 control={form.control}
@@ -381,8 +389,14 @@ const Create: React.FC<CreatePelaporProps> = ({
                                         <FormLabel>Foto</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Foto"
-                                                {...field}
+                                                type="file"
+                                                onChange={(e) => {
+                                                    if (e.target.files) {
+                                                        field.onChange(
+                                                            e.target.files[0]
+                                                        );
+                                                    }
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />

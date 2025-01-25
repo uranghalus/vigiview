@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +63,10 @@ class Pelapor extends Model
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class, 'jabatan_id');
+    }
+
+    protected function foto(): Attribute
+    {
+        return Attribute::make(get: fn($value) => url('storage/uploads/pelapor/' . $value));
     }
 }
