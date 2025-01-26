@@ -38,6 +38,7 @@ import {
     SelectValue,
 } from "@/Components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Pelapor } from "./PelaporColumn";
 
 export const pelaporSchema = z.object({
     nama_lengkap: z.string().min(1, "Nama Lengkap is required"),
@@ -65,33 +66,35 @@ export const pelaporSchema = z.object({
         }),
 });
 
-interface CreatePelaporProps {
+interface EditPelaporProps {
+    pelapor: Pelapor;
     units: Unit[];
     instansi: Instansi[];
     departemen: Departement[];
     jabatan: Jabatan[];
 }
 
-const Create: React.FC<CreatePelaporProps> = ({
+const Edit: React.FC<EditPelaporProps> = ({
     units = [],
     instansi = [],
     departemen = [],
     jabatan = [],
+    pelapor,
 }) => {
     const form = useForm<z.infer<typeof pelaporSchema>>({
         resolver: zodResolver(pelaporSchema),
         defaultValues: {
-            nama_lengkap: "",
-            jenis_kelamin: "Laki-Laki",
-            no_telp: "",
-            jenis_pengenal: "",
-            no_id_pengenal: "",
-            tipe_unit_id: "",
-            instansi_id: "",
-            departemen_id: "",
-            jabatan_id: "",
-            catatan: "",
-            foto: null,
+            nama_lengkap: pelapor.nama_lengkap,
+            jenis_kelamin: pelapor.jenis_kelamin as "Laki-Laki" | "Perempuan",
+            no_telp: pelapor.no_telp,
+            jenis_pengenal: pelapor.jenis_pengenal,
+            no_id_pengenal: pelapor.no_id_pengenal,
+            tipe_unit_id: pelapor.tipe_unit_id.toString(),
+            instansi_id: pelapor.instansi_id.toString(),
+            departemen_id: pelapor.departemen?.id.toString(),
+            jabatan_id: pelapor.jabatan?.id.toString(),
+            catatan: pelapor.catatan,
+            foto: pelapor.foto,
         },
     });
 
@@ -116,9 +119,9 @@ const Create: React.FC<CreatePelaporProps> = ({
             formData.append(key, (values as any)[key]);
         });
 
-        router.post("/master-kejadian/pelapor", formData, {
+        router.patch(`/master-kejadian/pelapor/${pelapor.id}`, formData, {
             onSuccess: () => {
-                toast.success("Pelapor berhasil ditambahkan", {
+                toast.success("Pelapor berhasil diperbarui", {
                     description: "Data pelapor berhasil disimpan.",
                     action: {
                         label: "Lihat Data",
@@ -137,10 +140,10 @@ const Create: React.FC<CreatePelaporProps> = ({
 
     return (
         <AuthenticatedLayout>
-            <Head title="Create Pelapor" />
+            <Head title="Edit Pelapor" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Create Pelapor</CardTitle>
+                    <CardTitle>Edit Pelapor</CardTitle>
                 </CardHeader>
                 <Form {...form}>
                     <form
@@ -345,8 +348,11 @@ const Create: React.FC<CreatePelaporProps> = ({
                                         <FormItem>
                                             <FormLabel>Departemen</FormLabel>
                                             <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
+                                                onValueChange={(value) =>
+                                                    field.onChange(value)
+                                                }
+                                                value={field.value}
+                                                required
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -375,8 +381,11 @@ const Create: React.FC<CreatePelaporProps> = ({
                                         <FormItem>
                                             <FormLabel>Jabatan</FormLabel>
                                             <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
+                                                onValueChange={(value) =>
+                                                    field.onChange(value)
+                                                }
+                                                value={field.value}
+                                                required
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -456,4 +465,4 @@ const Create: React.FC<CreatePelaporProps> = ({
     );
 };
 
-export default Create;
+export default Edit;

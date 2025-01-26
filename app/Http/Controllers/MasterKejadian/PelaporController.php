@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PelaporController extends Controller
 {
@@ -86,7 +87,13 @@ class PelaporController extends Controller
      */
     public function edit(Pelapor $pelapor)
     {
-        //
+        return Inertia::render('MasterKejadian/Pelapor/Edit', [
+            'pelapor' => $pelapor,
+            'units' => MasterUnit::all(),
+            'instansi' => MasterInstansi::all(),
+            'departemen' => Department::all(),
+            'jabatan' => Jabatan::all(),
+        ]);
     }
 
     /**
@@ -94,7 +101,40 @@ class PelaporController extends Controller
      */
     public function update(Request $request, Pelapor $pelapor)
     {
-        //
+        $user = Auth::user();
+        $validatedData = $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|string|max:255',
+            'no_telp' => 'nullable|string|max:255',
+            'jenis_pengenal' => 'nullable|string|max:255',
+            'no_id_pengenal' => 'nullable|string|max:255',
+            'tipe_unit_id' => 'required|string',
+            'instansi_id' => 'required|string',
+            'departemen_id' => 'required|string',
+            'jabatan_id' => 'required|string',
+            'catatan' => 'nullable|string',
+            'foto' => 'nullable|file|image|max:512',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            // Delete old photo if exists
+            if ($pelapor->foto) {
+                $filePath = 'uploads/pelapor/' . $pelapor->getRawOriginal('foto');
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+            }
+
+            $fileName = time() . '.' . $request->foto->extension();
+            $request->file('foto')->storeAs('uploads/pelapor', $fileName, 'public');
+            $validatedData['foto'] = $fileName;
+        }
+
+        $validatedData['update_user'] = $user->name;
+
+        $pelapor->update($validatedData);
+
+        return redirect()->route('pelapor.index')->with('success', 'Pelapor berhasil diperbarui.');
     }
 
     /**
@@ -103,7 +143,18 @@ class PelaporController extends Controller
     public function destroy(Pelapor $pelapor)
     {
         //
-        Storage::disk('public')->delete('uploads/pelapor/' . $pelapor->foto);
+        if ($pelapor->foto) {
+            $filePath = 'uploads/pelapor/' . $pelapor->getRawOriginal('foto');
+
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            } else {
+                Log::info('File tidak ditemukan: ' . $filePath);
+            }
+        }
+
         $pelapor->delete();
+
+        return redirect()->route('pelapor.index')->with('success', 'Pelapor berhasil dihapus.');
     }
 }
