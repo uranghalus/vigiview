@@ -116,7 +116,11 @@ const Edit: React.FC<EditPelaporProps> = ({
     function onSubmit(values: z.infer<typeof pelaporSchema>) {
         const formData = new FormData();
         Object.keys(values).forEach((key) => {
-            formData.append(key, (values as any)[key]);
+            if (key === "foto" && values.foto instanceof File) {
+                formData.append(key, values.foto);
+            } else {
+                formData.append(key, (values as any)[key]);
+            }
         });
 
         router.patch(`/master-kejadian/pelapor/${pelapor.id}`, formData, {
