@@ -1,0 +1,16 @@
+{
+    "name": "VigiView",
+    "short_name": "LPT",
+    "background_color": "#ffffff",
+    "display": "fullscreen",
+    "description": "Powered by IT TOP",
+    "theme_color": "#6777ef",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "IconApp.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

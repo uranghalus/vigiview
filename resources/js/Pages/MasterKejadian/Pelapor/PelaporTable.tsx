@@ -69,7 +69,7 @@ export default function PelaporTable<TData>({
                         className="btn-primary"
                         href={route("pelapor.create")}
                     >
-                        Tambah Data
+                        Tambah Pelapor
                     </Link>
                 </div>
             </div>
